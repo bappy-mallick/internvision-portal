@@ -9,9 +9,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends maven && rm -rf
 WORKDIR /app
 
 COPY pom.xml .
-
-RUN mvn dependency:go-offline -B --no-transfer-progress
-
 COPY src ./src
 
 RUN mvn clean package -DskipTests -B --no-transfer-progress
