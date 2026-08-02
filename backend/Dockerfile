@@ -1,9 +1,10 @@
 # ============================================================
-# Stage 1 - Build
+# Stage 1 - Build (Java 25)
 # ============================================================
 
 FROM openjdk:25-ea-jdk-slim AS build
 
+# Install Maven in build stage
 RUN apt-get update && apt-get install -y --no-install-recommends maven && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -11,7 +12,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
-RUN mvn clean package -DskipTests -B --no-transfer-progress
+RUN mvn clean package -DskipTests -B -e
 
 
 # ============================================================
