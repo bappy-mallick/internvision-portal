@@ -4,7 +4,10 @@
 # ============================================================
 
 # ── Stage 1: Build ──────────────────────────────────────────
-FROM maven:3.9.6-eclipse-temurin-25 AS build
+FROM eclipse-temurin:25-jdk AS build
+
+# Install Maven in build stage
+RUN apt-get update && apt-get install -y --no-install-recommends maven && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -17,12 +20,15 @@ COPY src ./src
 RUN mvn clean package -DskipTests -B --no-transfer-progress
 
 # ── Stage 2: Runtime ────────────────────────────────────────
-FROM eclipse-temurin:25-jre-alpine AS runtime
+FROM eclipse-temurin:25-jre AS runtime
+
+# Install wget for healthcheck
+RUN apt-get update && apt-get install -y --no-install-recommends wget && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Create a non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 
 # Copy the fat JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
@@ -45,3 +51,4 @@ ENTRYPOINT ["java", \
     "-XX:MaxRAMPercentage=75.0", \
     "-Djava.security.egd=file:/dev/./urandom", \
     "-jar", "app.jar"]
+
