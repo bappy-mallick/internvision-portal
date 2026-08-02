@@ -2,30 +2,33 @@
 # Stage 1 - Build
 # ============================================================
 
-FROM eclipse-temurin:25-jdk-alpine AS build
+FROM openjdk:25-ea-jdk-slim AS build
 
-RUN apk add --no-cache maven
+RUN apt-get update && apt-get install -y --no-install-recommends maven && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY pom.xml .
 
-RUN mvn dependency:go-offline -B
+RUN mvn dependency:go-offline -B --no-transfer-progress
 
 COPY src ./src
 
-RUN mvn clean package -DskipTests -B
+RUN mvn clean package -DskipTests -B --no-transfer-progress
 
 
 # ============================================================
-# Stage 2 - Runtime
+# Stage 2 - Runtime (Debian slim for glibc / netty-tcnative stability)
 # ============================================================
 
-FROM eclipse-temurin:25-jre-alpine
+FROM eclipse-temurin:25-jre
+
+# Install wget for health checks
+RUN apt-get update && apt-get install -y --no-install-recommends wget && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 
 COPY --from=build /app/target/*.jar app.jar
 
@@ -35,4 +38,8 @@ USER appuser
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java", \
+    "-XX:+UseContainerSupport", \
+    "-XX:MaxRAMPercentage=75.0", \
+    "-Djava.security.egd=file:/dev/./urandom", \
+    "-jar", "app.jar"]

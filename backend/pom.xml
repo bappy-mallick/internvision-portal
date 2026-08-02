@@ -37,7 +37,7 @@
 
         <!-- Dependency versions -->
         <jjwt.version>0.12.6</jjwt.version>
-        <firebase.version>9.2.0</firebase.version>
+        <firebase.version>9.4.3</firebase.version>
         <poi.version>5.2.5</poi.version>
         <razorpay.version>1.4.5</razorpay.version>
     </properties>
@@ -51,6 +51,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
