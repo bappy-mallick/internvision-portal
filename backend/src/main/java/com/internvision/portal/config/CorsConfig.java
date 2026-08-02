@@ -24,7 +24,13 @@ public class CorsConfig {
                 .map(String::trim)
                 .toList();
 
-        config.setAllowedOrigins(origins);
+        // Use allowedOriginPatterns instead of allowedOrigins so that:
+        // 1. We can use wildcard patterns to match all Vercel preview URLs.
+        // 2. allowCredentials(true) works alongside patterns (it does NOT work with "*" in setAllowedOrigins).
+        List<String> originPatterns = new java.util.ArrayList<>(origins);
+        // Allow all Vercel preview deployment URLs for this project
+        originPatterns.add("https://*.vercel.app");
+        config.setAllowedOriginPatterns(originPatterns);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
         config.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
