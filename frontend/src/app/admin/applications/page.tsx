@@ -20,7 +20,7 @@ export default function AdminApplicationsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedApp, setSelectedApp] = useState<ApplicationDto | null>(null);
 
-  const loadApplications = async (targetPage = page, query = search) => {
+  const loadApplications = React.useCallback(async (targetPage = page, query = search) => {
     setLoading(true);
     try {
       const res = await adminService.getApplications(targetPage, 10, query);
@@ -30,11 +30,12 @@ export default function AdminApplicationsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, search]);
 
   useEffect(() => {
-    loadApplications(page, search);
-  }, [page, search]);
+    loadApplications();
+  }, [loadApplications]);
+
 
   const handleSearch = (query: string) => {
     setSearch(query);

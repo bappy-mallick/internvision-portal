@@ -18,7 +18,7 @@ export default function AdminPaymentsPage() {
   const [statusFilter, setStatusFilter] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const loadPayments = async (targetPage = page, status = statusFilter) => {
+  const loadPayments = React.useCallback(async (targetPage = page, status = statusFilter) => {
     setLoading(true);
     try {
       const res = await adminService.getPayments(targetPage, 10, status);
@@ -28,11 +28,12 @@ export default function AdminPaymentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, statusFilter]);
 
   useEffect(() => {
-    loadPayments(page, statusFilter);
-  }, [page, statusFilter]);
+    loadPayments();
+  }, [loadPayments]);
+
 
   const handleFilterChange = (status: string) => {
     setStatusFilter(status);
