@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "InternVision Tech" }],
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://internvision-portal.onrender.com"
   ),
   openGraph: {
     type: "website",

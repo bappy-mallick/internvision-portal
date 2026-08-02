@@ -3,7 +3,7 @@ import { ApiResponse, ApplicationDto, DashboardStats, PageResponse, PaymentDto }
 
 export const adminService = {
   async getDashboardStats(): Promise<DashboardStats> {
-    const response = await api.get<ApiResponse<DashboardStats>>("/api/v1/admin/dashboard");
+    const response = await api.get<ApiResponse<DashboardStats>>("/admin/dashboard");
     if (response.data.success && response.data.data) {
       return response.data.data;
     }
@@ -16,7 +16,7 @@ export const adminService = {
   },
 
   async getApplications(page = 1, size = 10, search = ""): Promise<PageResponse<ApplicationDto>> {
-    const response = await api.get<ApiResponse<PageResponse<ApplicationDto>>>("/api/v1/admin/applications", {
+    const response = await api.get<ApiResponse<PageResponse<ApplicationDto>>>("/admin/applications", {
       params: { page, size, search },
     });
     if (response.data.success && response.data.data) {
@@ -33,7 +33,7 @@ export const adminService = {
   },
 
   async getApplicationById(id: string): Promise<ApplicationDto> {
-    const response = await api.get<ApiResponse<ApplicationDto>>(`/api/v1/admin/applications/${id}`);
+    const response = await api.get<ApiResponse<ApplicationDto>>(`/admin/applications/${id}`);
     if (response.data.success && response.data.data) {
       return response.data.data;
     }
@@ -41,7 +41,7 @@ export const adminService = {
   },
 
   async getPayments(page = 1, size = 10, status = ""): Promise<PageResponse<PaymentDto>> {
-    const response = await api.get<ApiResponse<PageResponse<PaymentDto>>>("/api/v1/admin/payments", {
+    const response = await api.get<ApiResponse<PageResponse<PaymentDto>>>("/admin/payments", {
       params: { page, size, status },
     });
     if (response.data.success && response.data.data) {
@@ -58,7 +58,7 @@ export const adminService = {
   },
 
   async getPaymentById(id: string): Promise<PaymentDto> {
-    const response = await api.get<ApiResponse<PaymentDto>>(`/api/v1/admin/payments/${id}`);
+    const response = await api.get<ApiResponse<PaymentDto>>(`/admin/payments/${id}`);
     if (response.data.success && response.data.data) {
       return response.data.data;
     }
@@ -66,14 +66,14 @@ export const adminService = {
   },
 
   async exportApplications(): Promise<Blob> {
-    const response = await api.get("/api/v1/admin/export/applications", {
+    const response = await api.get("/admin/export/applications", {
       responseType: "blob",
     });
     return response.data;
   },
 
   async exportPayments(): Promise<Blob> {
-    const response = await api.get("/api/v1/admin/export/payments", {
+    const response = await api.get("/admin/export/payments", {
       responseType: "blob",
     });
     return response.data;

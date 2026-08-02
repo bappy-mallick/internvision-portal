@@ -3,7 +3,7 @@ import { ApiResponse, InternshipApplicationRequest } from "@/types";
 
 export const internshipService = {
   async submitApplication(data: InternshipApplicationRequest): Promise<boolean> {
-    const response = await api.post<ApiResponse<void>>("/api/v1/internships", data);
+    const response = await api.post<ApiResponse<void>>("/internships", data);
     if (response.data.success) {
       return true;
     }

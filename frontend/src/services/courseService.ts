@@ -3,7 +3,7 @@ import { ApiResponse, Course } from "@/types";
 
 export const courseService = {
   async getFeaturedCourse(): Promise<Course> {
-    const response = await api.get<ApiResponse<Course>>("/api/v1/course");
+    const response = await api.get<ApiResponse<Course>>("/course");
     if (response.data.success && response.data.data) {
       return response.data.data;
     }

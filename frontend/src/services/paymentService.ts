@@ -3,7 +3,7 @@ import { ApiResponse, PaymentVerifyRequest } from "@/types";
 
 export const paymentService = {
   async verifyPayment(data: PaymentVerifyRequest): Promise<boolean> {
-    const response = await api.post<ApiResponse<void>>("/api/v1/payments/verify", data);
+    const response = await api.post<ApiResponse<void>>("/payments/verify", data);
     if (response.data.success) {
       return true;
     }
