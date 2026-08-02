@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Slf4j
 @Configuration
@@ -44,8 +45,10 @@ public class FirebaseConfig {
 
         try {
             InputStream serviceAccount = getCredentialsInputStream();
+            GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setCredentials(credentials)
                     .setProjectId(projectId)
                     .build();
 
@@ -53,15 +56,16 @@ public class FirebaseConfig {
             log.info("Firebase Application initialized successfully with Project ID: {}", projectId);
             return app;
         } catch (Exception e) {
-            log.warn("Failed to initialize Firebase Admin SDK with credentials: {}. Initializing fallback/emulator mode.", e.getMessage());
+            log.error("CRITICAL: Failed to initialize Firebase Admin SDK with primary credentials: {}", e.getMessage(), e);
             try {
                 FirebaseOptions options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.getApplicationDefault())
                         .setProjectId(projectId)
                         .build();
+                log.info("Initialized FirebaseApp using Application Default Credentials.");
                 return FirebaseApp.initializeApp(options);
             } catch (Exception fallbackEx) {
-                log.warn("Application Default Credentials unavailable. Initializing unauthenticated/anonymous FirebaseApp shell.");
+                log.error("Application Default Credentials also unavailable. Initializing fallback unauthenticated shell.", fallbackEx);
                 FirebaseOptions options = FirebaseOptions.builder()
                         .setCredentials(GoogleCredentials.newBuilder().build())
                         .setProjectId(projectId)
@@ -77,16 +81,27 @@ public class FirebaseConfig {
     }
 
     private InputStream getCredentialsInputStream() throws Exception {
-        // Priority 1: Inline JSON environment variable (for Render/Production cloud deployment)
+        // Priority 1: Inline JSON environment variable (Raw JSON or Base64 encoded)
         if (StringUtils.hasText(inlineServiceAccountJson) && !inlineServiceAccountJson.contains("REPLACE_WITH")) {
-            log.info("Using inline FIREBASE_SERVICE_ACCOUNT_JSON environment variable");
-            return new ByteArrayInputStream(inlineServiceAccountJson.getBytes(StandardCharsets.UTF_8));
+            String trimmedJson = inlineServiceAccountJson.trim();
+            byte[] jsonBytes;
+
+            // Auto-detect Base64 encoded string vs raw JSON
+            if (!trimmedJson.startsWith("{")) {
+                log.info("Decoding Base64 encoded FIREBASE_SERVICE_ACCOUNT_JSON environment variable");
+                jsonBytes = Base64.getDecoder().decode(trimmedJson);
+            } else {
+                log.info("Using raw FIREBASE_SERVICE_ACCOUNT_JSON environment variable");
+                jsonBytes = trimmedJson.getBytes(StandardCharsets.UTF_8);
+            }
+
+            return new ByteArrayInputStream(jsonBytes);
         }
 
         // Priority 2: File path / classpath resource
         Resource resource = resourceLoader.getResource(credentialsPath);
         if (resource.exists()) {
-            log.info("Using Firebase credentials file from: {}", credentialsPath);
+            log.info("Using Firebase credentials file from path: {}", credentialsPath);
             return resource.getInputStream();
         }
 
