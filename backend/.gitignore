@@ -1,0 +1,30 @@
+# ============================================================
+# InternVision Portal Backend — .gitignore
+# ============================================================
+
+# Maven build output
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# ──────────────── Secrets ────────────────
+.env
+*.env
+firebase-service-account.json
+
+# ──────────────── IDE ────────────────
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# ──────────────── OS ────────────────
+.DS_Store
+Thumbs.db
+
+# ──────────────── Logs ────────────────
+*.log

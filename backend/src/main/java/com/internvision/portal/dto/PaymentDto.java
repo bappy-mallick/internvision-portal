@@ -1,0 +1,26 @@
+package com.internvision.portal.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PaymentDto {
+
+    private String id;
+    private String registrationId;
+    private String studentName;
+    private String email;
+    private String razorpayOrderId;
+    private String razorpayPaymentId;
+    private double amount;
+    private String currency;
+    private String status;
+    private Date paidAt;
+}
