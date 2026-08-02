@@ -61,8 +61,9 @@ public class FirebaseConfig {
                         .build();
                 return FirebaseApp.initializeApp(options);
             } catch (Exception fallbackEx) {
-                log.warn("Application Default Credentials unavailable. Initializing empty FirebaseApp shell.");
+                log.warn("Application Default Credentials unavailable. Initializing unauthenticated/anonymous FirebaseApp shell.");
                 FirebaseOptions options = FirebaseOptions.builder()
+                        .setCredentials(GoogleCredentials.newBuilder().build())
                         .setProjectId(projectId)
                         .build();
                 return FirebaseApp.initializeApp(options);
