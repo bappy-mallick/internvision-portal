@@ -4,9 +4,9 @@
 # ============================================================
 
 # ── Stage 1: Build ──────────────────────────────────────────
-FROM eclipse-temurin:25-jdk AS build
+FROM openjdk:25-ea-jdk-slim AS build
 
-# Install Maven in build stage
+# Install Maven and dependencies in build stage
 RUN apt-get update && apt-get install -y --no-install-recommends maven && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
