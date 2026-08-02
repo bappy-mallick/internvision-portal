@@ -1,6 +1,7 @@
 package com.internvision.portal.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -22,9 +23,7 @@ import java.util.Base64;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.project.id:internvision-portal}")
-    private String projectId;
-
+    // Only used as a human-readable label in logs. NOT passed to FirebaseOptions.
     @Value("${firebase.credentials.path:classpath:firebase-service-account.json}")
     private String credentialsPath;
 
@@ -47,31 +46,33 @@ public class FirebaseConfig {
             InputStream serviceAccount = getCredentialsInputStream();
             GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
 
+            // Extract project ID directly from parsed service account credentials.
+            // This is the ONLY correct source — never rely on env var or hardcoded default.
+            String resolvedProjectId = null;
+            if (credentials instanceof ServiceAccountCredentials sac) {
+                resolvedProjectId = sac.getProjectId();
+            }
+
+            if (!StringUtils.hasText(resolvedProjectId)) {
+                throw new IllegalStateException(
+                    "Could not extract project_id from service account credentials. " +
+                    "Ensure the service account JSON contains a valid 'project_id' field."
+                );
+            }
+
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(credentials)
-                    .setProjectId(projectId)
+                    .setProjectId(resolvedProjectId)
                     .build();
 
             FirebaseApp app = FirebaseApp.initializeApp(options);
-            log.info("Firebase Application initialized successfully with Project ID: {}", projectId);
+            log.info("Firebase Application initialized successfully with Project ID: {}", resolvedProjectId);
             return app;
+
         } catch (Exception e) {
-            log.error("CRITICAL: Failed to initialize Firebase Admin SDK with primary credentials: {}", e.getMessage(), e);
-            try {
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.getApplicationDefault())
-                        .setProjectId(projectId)
-                        .build();
-                log.info("Initialized FirebaseApp using Application Default Credentials.");
-                return FirebaseApp.initializeApp(options);
-            } catch (Exception fallbackEx) {
-                log.error("Application Default Credentials also unavailable. Initializing fallback unauthenticated shell.", fallbackEx);
-                FirebaseOptions options = FirebaseOptions.builder()
-                        .setCredentials(GoogleCredentials.newBuilder().build())
-                        .setProjectId(projectId)
-                        .build();
-                return FirebaseApp.initializeApp(options);
-            }
+            log.error("CRITICAL: Failed to initialize Firebase Admin SDK. Application cannot serve Firestore requests. Reason: {}", e.getMessage(), e);
+            // Re-throw so Spring Boot fails fast and shows the real error instead of silently serving broken requests.
+            throw new IllegalStateException("Firebase initialization failed — check FIREBASE_SERVICE_ACCOUNT_JSON environment variable.", e);
         }
     }
 
@@ -82,7 +83,7 @@ public class FirebaseConfig {
 
     private InputStream getCredentialsInputStream() throws Exception {
         // Priority 1: Inline JSON environment variable (Raw JSON or Base64 encoded)
-        if (StringUtils.hasText(inlineServiceAccountJson) && !inlineServiceAccountJson.contains("REPLACE_WITH")) {
+        if (StringUtils.hasText(inlineServiceAccountJson)) {
             String trimmedJson = inlineServiceAccountJson.trim();
             byte[] jsonBytes;
 
@@ -98,13 +99,17 @@ public class FirebaseConfig {
             return new ByteArrayInputStream(jsonBytes);
         }
 
-        // Priority 2: File path / classpath resource
+        // Priority 2: Classpath / file path resource (local dev)
         Resource resource = resourceLoader.getResource(credentialsPath);
         if (resource.exists()) {
             log.info("Using Firebase credentials file from path: {}", credentialsPath);
             return resource.getInputStream();
         }
 
-        throw new IllegalStateException("Firebase credentials not found at path: " + credentialsPath);
+        throw new IllegalStateException(
+            "Firebase credentials not found. Set FIREBASE_SERVICE_ACCOUNT_JSON on Render, " +
+            "or provide a file at: " + credentialsPath
+        );
     }
 }
+
