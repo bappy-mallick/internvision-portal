@@ -735,10 +735,11 @@ export default function AboutPage() {
                 </Button>
               </a>
               <a
-                href="mailto:bappymallick2410@gmail.com"
+                href="mailto:bappymallick2410@gmail.com?subject=Opportunity%20for%20Bappy%20Mallick"
                 aria-label="Send Email to Bappy Mallick"
               >
                 <Button
+                  variant="outline"
                   size="lg"
                   className="font-bold text-base px-8 w-full sm:w-auto bg-background text-foreground border-2 border-border hover:bg-accent hover:text-accent-foreground shadow-md transition-colors"
                 >
