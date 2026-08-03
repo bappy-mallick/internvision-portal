@@ -660,24 +660,27 @@ export default function AboutPage() {
             title="Get In Touch"
             subtitle="I'm always open to new opportunities, collaborations, and interesting conversations."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
             {contactLinks.map(({ icon: Icon, label, value, href, iconColor, bg }) => {
               const card = (
                 <Card
-                  className={`p-5 flex flex-col items-center gap-3 text-center transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
+                  className={`h-full p-5 flex flex-col items-center justify-center gap-3 text-center transition-all duration-200 hover:shadow-md hover:scale-[1.02] ${
                     href ? "cursor-pointer" : ""
                   }`}
                 >
                   <div
-                    className={`h-12 w-12 flex items-center justify-center rounded-[12px] ${bg}`}
+                    className={`h-12 w-12 flex items-center justify-center rounded-[12px] shrink-0 ${bg}`}
                   >
                     <Icon className={`h-6 w-6 ${iconColor}`} />
                   </div>
-                  <div>
+                  <div className="w-full">
                     <p className="text-xs text-muted-foreground font-medium">
                       {label}
                     </p>
-                    <p className="text-sm font-semibold text-foreground mt-0.5 break-all">
+                    <p
+                      className="text-xs sm:text-sm font-semibold text-foreground mt-1 [word-break:break-word] leading-snug"
+                      title={value}
+                    >
                       {value}
                     </p>
                   </div>
@@ -692,11 +695,12 @@ export default function AboutPage() {
                   href={href}
                   target={isDirectLink ? undefined : "_blank"}
                   rel={isDirectLink ? undefined : "noopener noreferrer"}
+                  className="h-full flex flex-col"
                 >
                   {card}
                 </a>
               ) : (
-                <div key={label}>{card}</div>
+                <div key={label} className="h-full flex flex-col">{card}</div>
               );
             })}
           </div>
