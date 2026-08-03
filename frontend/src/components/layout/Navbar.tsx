@@ -36,6 +36,9 @@ export const Navbar: React.FC = () => {
           <Link href="/login" className="hover:text-foreground transition-colors">
             Admin Portal
           </Link>
+          <Link href="/about" className="hover:text-foreground transition-colors">
+            About
+          </Link>
         </div>
 
         {/* Right CTA Actions */}
@@ -96,6 +99,13 @@ export const Navbar: React.FC = () => {
             className="block py-2 text-sm font-medium text-foreground hover:text-primary"
           >
             Admin Portal
+          </Link>
+          <Link
+            href="/about"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block py-2 text-sm font-medium text-foreground hover:text-primary"
+          >
+            About
           </Link>
           <div className="pt-2 flex flex-col space-y-2">
             <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
