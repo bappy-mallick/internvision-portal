@@ -17,6 +17,7 @@ import {
   Star,
   Calendar,
   ChevronRight,
+  Phone,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -89,28 +90,28 @@ const projects = [
     description:
       "A production-deployed full-stack internship and course management platform. Features JWT-secured Spring Boot REST APIs, Razorpay payment integration, Firebase-based student tracking, and a Next.js admin dashboard with real-time application management.",
     tech: ["Spring Boot", "Next.js", "Firebase", "PostgreSQL", "Razorpay", "JWT"],
-    github: "https://github.com/bappy-mallick",
+    github: "https://github.com/bappy-mallick/internvision-portal",
   },
   {
     title: "AstraAI",
     description:
       "An AI-powered productivity platform integrating Google Gemini AI for intelligent text generation, summarization, and content assistance. Built with a Spring Boot REST backend and a React frontend for seamless real-time AI interactions.",
     tech: ["Spring Boot", "React", "Gemini AI", "REST APIs", "Firebase"],
-    github: "https://github.com/bappy-mallick",
+    github: "https://github.com/bappy-mallick/astraai-backend",
   },
   {
     title: "DeltaCore",
     description:
       "A high-performance backend service platform built on a microservices-inspired architecture. Provides scalable REST API endpoints with PostgreSQL persistence, Docker containerization, and robust error handling for enterprise-grade reliability.",
     tech: ["Java", "Spring Boot", "PostgreSQL", "Docker", "Maven"],
-    github: "https://github.com/bappy-mallick",
+    github: "https://github.com/bappy-mallick/DeltaCore-MainApp",
   },
   {
     title: "E-Commerce Backend",
     description:
       "A production-ready e-commerce backend featuring complete product management, order processing, and user authentication. Implements a clean layered architecture with service, repository, and controller layers following Spring Boot best practices.",
     tech: ["Spring Boot", "PostgreSQL", "REST APIs", "Maven", "Postman"],
-    github: "https://github.com/bappy-mallick",
+    github: "https://github.com/bappy-mallick/springboot-ecommerce-backend",
   },
 ];
 
@@ -211,6 +212,14 @@ const contactLinks = [
     bg: "bg-red-50 dark:bg-red-950/40",
   },
   {
+    icon: Phone,
+    label: "Phone",
+    value: "+91 8107272366",
+    href: "tel:+918107272366",
+    iconColor: "text-green-600",
+    bg: "bg-green-50 dark:bg-green-950/40",
+  },
+  {
     icon: GitHubIcon,
     label: "GitHub",
     value: "github.com/bappy-mallick",
@@ -221,16 +230,16 @@ const contactLinks = [
   {
     icon: LinkedInIcon,
     label: "LinkedIn",
-    value: "linkedin.com/in/bappy-mallick",
-    href: "https://linkedin.com/in/bappy-mallick",
+    value: "linkedin.com/in/bappymallick",
+    href: "https://linkedin.com/in/bappymallick",
     iconColor: "text-blue-600",
     bg: "bg-blue-50 dark:bg-blue-950/40",
   },
   {
     icon: MapPin,
     label: "Location",
-    value: "West Bengal, India",
-    href: null as string | null,
+    value: "Bhopal, Madhya Pradesh, India",
+    href: "https://www.google.com/maps/search/?api=1&query=Bhopal,+Madhya+Pradesh,+India",
     iconColor: "text-emerald-600",
     bg: "bg-emerald-50 dark:bg-emerald-950/40",
   },
@@ -359,7 +368,7 @@ export default function AboutPage() {
                     Download Resume
                   </Button>
                 </a>
-                <a href="mailto:bappymallick.dev@gmail.com">
+                <a href="#contact">
                   <Button
                     variant="outline"
                     size="lg"
@@ -424,12 +433,12 @@ export default function AboutPage() {
             <Card className="p-6 space-y-4">
               <h3 className="font-semibold text-foreground">Quick Facts</h3>
               {[
-                { label: "Degree", value: "B.Sc. Computer Science" },
+                { label: "Degree", value: "B.Tech Computer Science Engineering" },
                 { label: "Specialization", value: "Backend Development" },
                 { label: "Primary Stack", value: "Java · Spring Boot" },
                 { label: "Cloud", value: "Firebase · Supabase" },
                 { label: "Database", value: "PostgreSQL · Firestore" },
-                { label: "Location", value: "West Bengal, India" },
+                { label: "Location", value: "Bhopal, Madhya Pradesh, India" },
                 { label: "Status", value: "Open to Opportunities" },
               ].map(({ label, value }) => (
                 <div key={label} className="flex items-start gap-2 text-sm">
@@ -645,13 +654,13 @@ export default function AboutPage() {
       </section>
 
       {/* ── 8. Contact ───────────────────────────────────────────────────── */}
-      <section className="py-20 bg-background border-b border-border">
+      <section id="contact" className="py-20 bg-background border-b border-border">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeader
             title="Get In Touch"
             subtitle="I'm always open to new opportunities, collaborations, and interesting conversations."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 max-w-6xl mx-auto">
             {contactLinks.map(({ icon: Icon, label, value, href, iconColor, bg }) => {
               const card = (
                 <Card
@@ -679,7 +688,7 @@ export default function AboutPage() {
                 <a
                   key={label}
                   href={href}
-                  target={href.startsWith("mailto") ? "_self" : "_blank"}
+                  target={href.startsWith("mailto:") || href.startsWith("tel:") ? "_self" : "_blank"}
                   rel="noopener noreferrer"
                 >
                   {card}
