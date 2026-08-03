@@ -206,8 +206,8 @@ const contactLinks = [
   {
     icon: Mail,
     label: "Email",
-    value: "bappymallick.dev@gmail.com",
-    href: "mailto:bappymallick.dev@gmail.com",
+    value: "bappymallick2410@gmail.com",
+    href: "mailto:bappymallick2410@gmail.com",
     iconColor: "text-red-500",
     bg: "bg-red-50 dark:bg-red-950/40",
   },
@@ -684,12 +684,14 @@ export default function AboutPage() {
                 </Card>
               );
 
+              const isDirectLink = href?.startsWith("mailto:") || href?.startsWith("tel:");
+
               return href ? (
                 <a
                   key={label}
                   href={href}
-                  target={href.startsWith("mailto:") || href.startsWith("tel:") ? "_self" : "_blank"}
-                  rel="noopener noreferrer"
+                  target={isDirectLink ? undefined : "_blank"}
+                  rel={isDirectLink ? undefined : "noopener noreferrer"}
                 >
                   {card}
                 </a>
@@ -728,13 +730,15 @@ export default function AboutPage() {
                   Download Resume
                 </Button>
               </a>
-              <a href="mailto:bappymallick.dev@gmail.com">
+              <a
+                href="mailto:bappymallick2410@gmail.com"
+                aria-label="Send Email to Bappy Mallick"
+              >
                 <Button
-                  variant="outline"
                   size="lg"
-                  className="font-bold text-base px-8 w-full sm:w-auto border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
+                  className="font-bold text-base px-8 w-full sm:w-auto bg-background text-foreground border-2 border-border hover:bg-accent hover:text-accent-foreground shadow-md transition-colors"
                 >
-                  <Mail className="mr-2 h-5 w-5" />
+                  <Mail className="mr-2 h-5 w-5 text-primary" />
                   Send an Email
                 </Button>
               </a>
