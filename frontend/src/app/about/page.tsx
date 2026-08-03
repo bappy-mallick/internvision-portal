@@ -117,20 +117,20 @@ const projects = [
 
 const experiences = [
   {
-    role: "Java Full Stack Developer Intern",
-    company: "InternVision Tech",
-    period: "2024 – Present",
+    role: "Java Full Stack Development Virtual Intern",
+    company: "AICTE EduSkills",
+    period: "January 2026 – March 2026",
     description:
-      "Designed and built the complete InternVision Portal from the ground up — a production-deployed platform handling course registrations, Razorpay payment processing, Firebase-based student management, and a Spring Boot REST API backend. Delivered end-to-end features across both the Next.js frontend and the Spring Boot backend.",
-    skills: ["Spring Boot", "Next.js", "Firebase", "PostgreSQL", "Razorpay"],
+      "Completed a 10-week structured virtual internship focused on Java, Spring Boot, REST API development, Backend architecture, and Full-stack application development.",
+    skills: ["Java", "Spring Boot", "REST APIs", "Backend Architecture", "Full-Stack Development"],
   },
   {
-    role: "Android Developer Intern",
-    company: "Tech Organization",
-    period: "2023",
+    role: "Android Developer Virtual Intern",
+    company: "Google for Developers & AICTE EduSkills",
+    period: "October 2025 – December 2025",
     description:
-      "Developed Android applications using Java and Android Studio. Implemented UI layouts, Firebase Realtime Database integration, and performance optimizations to deliver a smooth mobile user experience.",
-    skills: ["Java", "Android Studio", "Firebase", "XML Layouts"],
+      "Completed a 10-week virtual internship focused on Android Studio, Java, Firebase, Android application development, UI/UX, and App lifecycle.",
+    skills: ["Android Studio", "Java", "Firebase", "Android Development", "UI/UX", "App Lifecycle"],
   },
 ];
 
